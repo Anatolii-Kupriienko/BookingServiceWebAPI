@@ -2,15 +2,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-namespace API.Models
+namespace API.DbAccess.Models
 {
     [Table("RealEstate")]
-    public class RealEstate
+    public class RealEstateModel : BaseModel
     {
-        [Key]
-        [Column("Id")]
-        public int Id { get; set; }
-
         [Required]
         [Column("Location")]
         public string Location { get; set; } = string.Empty; // this can be a separate table but for simplicity we will keep it as a string
@@ -48,7 +44,7 @@ namespace API.Models
 
         public UserModel Owner { get; set; }
 
-        public RealEstateType Type { get; set; }
+        public RealEstateTypeModel Type { get; set; }
 
         public UserModel? OccupiedBy { get; set; }
     }

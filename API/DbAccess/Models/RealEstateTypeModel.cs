@@ -2,15 +2,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
-namespace API.Models
+namespace API.DbAccess.Models
 {
     [Table("RealEstateType")]
-    public class RealEstateType
+    public class RealEstateTypeModel : BaseModel
     {
-        [Key]
-        [Column("Id")]
-        public int Id { get; set; }
-
         [Required]
         [MaxLength(70)]
         [MinLength(3)]

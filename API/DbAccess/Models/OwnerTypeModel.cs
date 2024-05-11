@@ -1,15 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace API.Models
+namespace API.DbAccess.Models
 {
     [Table("OwnerType")]
-    public class OwnerType
+    public class OwnerTypeModel : BaseModel
     {
-        [Column("Id")]
-        [Key]
-        public int Id { get; set; }
-
         [Column("Type")]
         [Required]
         public string Type { get; set; } = string.Empty;
