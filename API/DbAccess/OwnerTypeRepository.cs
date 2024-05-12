@@ -21,19 +21,21 @@ namespace API.DbAccess
             _context.SaveChanges();
         }
 
-        public void Delete(OwnerTypeModel model)
+        public bool Delete(OwnerTypeModel model)
         {
-            _context.Remove(model);
+            var result = _context.Remove(model);
             _context.SaveChanges();
+            return result.State == Microsoft.EntityFrameworkCore.EntityState.Deleted;
         }
 
-        public void DeleteById(int id)
+        public bool DeleteById(int id)
         {
             var model = GetById(id);
             if (model is not null)
             {
-                Delete(model);
+                return Delete(model);
             }
+            return false;
         }
 
         public IEnumerable<OwnerTypeModel> Get()

@@ -18,19 +18,21 @@ namespace API.DbAccess
             _context.SaveChanges();
         }
 
-        public void Delete(RealEstateModel model)
+        public bool Delete(RealEstateModel model)
         {
-            _context.Remove(model);
+            var result = _context.Remove(model);
             _context.SaveChanges();
+            return result.State == EntityState.Deleted;
         }
 
-        public void DeleteById(int id)
+        public bool DeleteById(int id)
         {
             var model = GetById(id);
             if (model is not null)
             {
-                Delete(model);
+                return Delete(model);
             }
+            return false;
         }
 
         public IEnumerable<RealEstateModel> Get()

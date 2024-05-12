@@ -1,8 +1,10 @@
+using API.BusinessLogic;
 using API.DbAccess;
 using API.DbAccess.Models;
 using API.Models;
 using API.Services;
 using API.Utils;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,6 +36,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRealEstateService, RealEstateService>();
 builder.Services.AddScoped<ICrud<OwnerType>, OwnerTypeService>();
 builder.Services.AddScoped<ICrud<RealEstateType>, RealEstateTypeService>();
+builder.Services.AddScoped<IMapper>(sp => new Mapper(new MapperConfiguration(conf => { conf.AddProfile<AutomapperProfile>(); })));
 
 var app = builder.Build();
 
