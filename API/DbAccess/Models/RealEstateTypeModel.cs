@@ -15,6 +15,6 @@ namespace API.DbAccess.Models
 
         [AllowNull]
         [Column("Description")]
-        public string? Description { get; set; } = string.Empty; //should be used mostly for "Other" type 
+        public string? Description { get; set; } = string.Empty; //should be used mostly for "Other" type or additional information like included amenities
     }
 }
