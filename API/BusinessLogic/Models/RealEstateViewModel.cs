@@ -2,8 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace API.Models
 {
-    public class RealEstateInsertModel
+    public class RealEstateViewModel
     {
+        [Required]
+        public int Id { get; set; }
         [Required]
         public string Location { get; set; } = string.Empty;
         [Required]
@@ -11,17 +13,12 @@ namespace API.Models
         [Required]
         public double PricePerNight { get; set; }
         [Required]
-        public int TypeId { get; set; }
+        public RealEstateType Type { get; set; }
         [Required]
-        public string OwnerId { get; set; } = string.Empty;
+        public UserUpdateModel Owner { get; set; }
         [Required]
         public bool IsVacant { get; set; }
+        public UserUpdateModel? OccupiedBy { get; set; }
         public string? Notes { get; set; }
-
-
-        public bool IsValid()
-        {
-            return !string.IsNullOrEmpty(Location) && SizeSquareMeters > 0 && PricePerNight > 0 && TypeId != null && OwnerId != null;
-        }
     }
 }

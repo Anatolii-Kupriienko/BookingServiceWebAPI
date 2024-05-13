@@ -52,7 +52,10 @@ namespace API.Controllers
                 try
                 {
                     var registerResult = await _userService.RegisterAsync(user);
-
+                    if (user.IsOwner)
+                    {
+                        await _userService.AddToRoleAsync(registerResult.Id, "Owner");
+                    }
                     return CreatedAtAction(nameof(Register), registerResult);
                 }
                 catch (Exception e) // this isn't the best way to handle exceptions in a production application
@@ -73,7 +76,7 @@ namespace API.Controllers
 
             return Ok();
         }
-        
+
         [Authorize]
         [HttpGet]
         [Route("me")]

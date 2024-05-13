@@ -7,16 +7,29 @@ namespace API.BusinessLogic
     {
         public AutomapperProfile()
         {
-            CreateMap<Models.RealEstate, DbAccess.Models.RealEstateModel>()
+            CreateMap<Models.RealEstateViewModel, DbAccess.Models.RealEstateModel>()
             .ForMember(rem => rem.OwnerId, re => re.MapFrom(re => re.Owner.Id))
             .ForMember(rem => rem.RealEstateTypeId, re => re.MapFrom(re => re.Type.Id))
             .ForMember(rem => rem.OccupiedById, re =>
             {
                 re.PreCondition(re => re.OccupiedBy != null);
                 re.MapFrom(re => re.OccupiedBy!.Id);
-            }).ReverseMap();
+            });
 
-            CreateMap<Models.RealEstateInsertModel, DbAccess.Models.RealEstateModel>();
+            CreateMap<DbAccess.Models.RealEstateModel, Models.RealEstateViewModel>()
+            .ForMember(re => re.Owner, rem => rem.MapFrom(rem => rem.Owner))
+            .ForMember(re => re.Type, rem => rem.MapFrom(rem => rem.Type))
+            .ForMember(re => re.OccupiedBy, rem =>
+            {
+                rem.PreCondition(rem => rem.OccupiedBy != null);
+                rem.MapFrom(rem => rem.OccupiedBy);
+            });
+
+            CreateMap<Models.RealEstateInsertModel, DbAccess.Models.RealEstateModel>()
+            .ForMember(rem => rem.RealEstateTypeId, reim => reim.MapFrom(reim => reim.TypeId));
+
+            CreateMap<Models.RealEstateUpdateModel, DbAccess.Models.RealEstateModel>()
+            .ForMember(rem => rem.RealEstateTypeId, reim => reim.MapFrom(reim => reim.TypeId));
 
             CreateMap<Models.UserUpdateModel, DbAccess.Models.UserModel>()
             .ForMember(um => um.OwnerTypeId, u =>

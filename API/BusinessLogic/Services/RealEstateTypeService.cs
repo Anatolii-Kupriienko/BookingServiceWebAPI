@@ -37,14 +37,9 @@ namespace API.Services
             return _repository.DeleteById(id);
         }
 
-        public IEnumerable<RealEstateType> Get()
-        {
-            return mapper.Map<IEnumerable<RealEstateType>>(_repository.Get());
-        }
-
         public IEnumerable<RealEstateType> GetAll()
         {
-            throw new NotImplementedException();
+            return mapper.Map<IEnumerable<RealEstateType>>(_repository.Get());
         }
 
         public RealEstateType? GetById(int id)

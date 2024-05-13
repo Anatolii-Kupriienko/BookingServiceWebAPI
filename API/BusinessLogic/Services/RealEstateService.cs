@@ -19,20 +19,21 @@ namespace API.Services
             this.userManager = userManager;
         }
 
-        public void BookForUser(int realEstateId, string userId)
+        public async Task BookForUser(int realEstateId, string userId)
         {
             var realEstate = _repository.GetById(realEstateId);
-            var user = userManager.FindByIdAsync(userId).Result;
+            var user = await userManager.FindByIdAsync(userId);
             if (realEstate is null || user is null || realEstate.OccupiedById != null)
             {
                 throw new ArgumentException("Invalid real estate or user");
             }
             // the above check can be separated into several if statements for better readability and error messages
+            realEstate.IsVacant = false;
             realEstate.OccupiedById = user.Id;
             _repository.Update(realEstate);
         }
 
-        public RealEstate Create(RealEstateInsertModel realEstate)
+        public RealEstateViewModel Create(RealEstateInsertModel realEstate)
         {
             if (realEstate == null || !realEstate.IsValid())
             {
@@ -40,7 +41,7 @@ namespace API.Services
             }
 
             var resut = _repository.Add(mapper.Map<RealEstateModel>(realEstate));
-            return mapper.Map<RealEstate>(resut);
+            return mapper.Map<RealEstateViewModel>(resut);
         }
 
         public bool DeleteById(int id)
@@ -56,27 +57,39 @@ namespace API.Services
                 throw new ArgumentException("Invalid real estate");
             }
 
+            realEstate.IsVacant = true;
             realEstate.OccupiedById = null;
             _repository.Update(realEstate);
         }
 
-        public IEnumerable<RealEstate> GetAll()
+        public IEnumerable<RealEstateViewModel> GetAll()
         {
-            return mapper.Map<IEnumerable<RealEstate>>(_repository.Get());
+            return mapper.Map<IEnumerable<RealEstateViewModel>>(_repository.Get());
         }
 
-        public RealEstate? GetById(int id)
+        public RealEstateViewModel? GetById(int id)
         {
             var result = _repository.GetById(id);
             if (result is not null)
             {
-                return mapper.Map<RealEstate>(result);
+                return mapper.Map<RealEstateViewModel>(result);
             }
 
             return null;
         }
 
-        public IEnumerable<RealEstate> GetByOwnerType(int ownerTypeId)
+        public IEnumerable<RealEstateViewModel> GetByOwner(string ownerId)
+        {
+            var data = _repository.Get().Where(x => x.OwnerId == ownerId);
+            if (!data.Any())
+            {
+                throw new ArgumentException("No real estates found for the given owner");
+            }
+
+            return mapper.Map<IEnumerable<RealEstateViewModel>>(data);
+        }
+
+        public IEnumerable<RealEstateViewModel> GetByOwnerType(int ownerTypeId)
         {
             var data = _repository.Get().Where(x => x.Owner.OwnerTypeId == ownerTypeId);
             if (!data.Any())
@@ -84,10 +97,10 @@ namespace API.Services
                 throw new ArgumentException("No real estates found for the given owner type");
             }
 
-            return mapper.Map<IEnumerable<RealEstate>>(data);
+            return mapper.Map<IEnumerable<RealEstateViewModel>>(data);
         }
 
-        public IEnumerable<RealEstate> GetByType(int realEstateTypeId)
+        public IEnumerable<RealEstateViewModel> GetByType(int realEstateTypeId)
         {
             var data = _repository.Get().Where(x => x.RealEstateTypeId == realEstateTypeId);
             if (!data.Any())
@@ -95,10 +108,10 @@ namespace API.Services
                 throw new ArgumentException("No real estates found for the given type");
             }
 
-            return mapper.Map<IEnumerable<RealEstate>>(data);
+            return mapper.Map<IEnumerable<RealEstateViewModel>>(data);
         }
 
-        public IEnumerable<RealEstate> GetVacant()
+        public IEnumerable<RealEstateViewModel> GetVacant()
         { // all of these where clauses can be added as separate methods in the repository
             var data = _repository.Get().Where(x => x.OccupiedById == null);
             if (!data.Any())
@@ -106,10 +119,10 @@ namespace API.Services
                 throw new ArgumentException("No vacant real estates found");
             }
 
-            return mapper.Map<IEnumerable<RealEstate>>(data);
+            return mapper.Map<IEnumerable<RealEstateViewModel>>(data);
         }
 
-        public RealEstate Update(RealEstate realEstate)
+        public RealEstateViewModel Update(RealEstateUpdateModel realEstate)
         {
             if (realEstate == null || !realEstate.IsValid())
             {
@@ -117,7 +130,7 @@ namespace API.Services
             }
 
             var result = _repository.Update(mapper.Map<RealEstateModel>(realEstate));
-            return mapper.Map<RealEstate>(result);
+            return mapper.Map<RealEstateViewModel>(result);
         }
     }
 }

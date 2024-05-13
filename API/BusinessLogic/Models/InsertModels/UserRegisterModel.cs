@@ -9,5 +9,6 @@ namespace API.Models
     public class UserRegisterModel : UserLoginModel
     {
         public string Email { get; set; } = string.Empty;
+        public bool IsOwner { get; set; } = false;
     }
 }
