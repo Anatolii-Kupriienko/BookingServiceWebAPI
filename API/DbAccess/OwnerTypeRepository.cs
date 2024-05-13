@@ -22,7 +22,7 @@ namespace API.DbAccess
         {
             var result = _context.Remove(model);
             _context.SaveChanges();
-            return result.State == Microsoft.EntityFrameworkCore.EntityState.Deleted;
+            return result.State == Microsoft.EntityFrameworkCore.EntityState.Detached;
         }
 
         public bool DeleteById(int id)
