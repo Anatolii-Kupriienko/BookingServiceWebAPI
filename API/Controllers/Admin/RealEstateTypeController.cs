@@ -44,7 +44,62 @@ namespace API.Controllers.Admin
             {
                 return NotFound();
             }
+
             return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetRealEstateTypeById(int id)
+        {
+            var result = _realEstateTypeService.GetById(id);
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPut]
+        public IActionResult UpdateRealEstateType(RealEstateType realEstateType)
+        {
+            if (ModelState.IsValid && realEstateType is not null)
+            {
+                try
+                {
+                    _realEstateTypeService.Update(realEstateType);
+                    return Ok();
+                }
+                catch(ArgumentException ex)
+                {
+                    return NotFound(ex.Message);
+                }
+                catch
+                {
+                    return BadRequest();
+                }
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteRealEstateType(int id)
+        {
+            try
+            {
+                var result = _realEstateTypeService.DeleteById(id);
+                if (result)
+                {
+                    return Ok();
+                }
+
+                return NotFound();
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
 
     }

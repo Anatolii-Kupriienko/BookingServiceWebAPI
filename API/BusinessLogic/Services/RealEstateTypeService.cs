@@ -17,19 +17,15 @@ namespace API.Services
             this.mapper = mapper;
         }
 
-        public void Add(RealEstateType model)
-        {
-            if (model == null || !model.IsValid())
-            {
-                throw new ArgumentException(nameof(model));
-            }
-
-            _repository.Add(mapper.Map<RealEstateTypeModel>(model));
-        }
-
         public RealEstateType Create(RealEstateTypeInsertModel realEstateType)
         {
-            throw new NotImplementedException();
+            if (realEstateType == null || !realEstateType.IsValid())
+            {
+                throw new ArgumentException(nameof(realEstateType));
+            }
+
+            var entity = _repository.Add(mapper.Map<RealEstateTypeModel>(realEstateType));
+            return mapper.Map<RealEstateType>(entity);
         }
 
         public bool DeleteById(int id)
@@ -53,19 +49,15 @@ namespace API.Services
             return null;
         }
 
-        public void Update(RealEstateType model)
-        {
-            if (model == null || !model.IsValid())
-            {
-                throw new ArgumentException(nameof(model));
-            }
-
-            _repository.Update(mapper.Map<RealEstateTypeModel>(model));
-        }
-
         RealEstateType IRealEstateTypeService.Update(RealEstateType realEstateType)
         {
-            throw new NotImplementedException();
+            if (realEstateType == null || !realEstateType.IsValid())
+            {
+                throw new ArgumentException(nameof(realEstateType));
+            }
+
+            var entity = _repository.Update(mapper.Map<RealEstateTypeModel>(realEstateType));
+            return mapper.Map<RealEstateType>(entity);
         }
     }
 }
