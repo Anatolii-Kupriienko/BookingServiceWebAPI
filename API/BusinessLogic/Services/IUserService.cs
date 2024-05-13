@@ -10,5 +10,8 @@ namespace API.Services
         Task<UserViewModel?> GetByIdAsync(string id);
         Task<UserViewModel?> GetByUsernameAsync(string username);
         Task<UserViewModel> UpdateAsync(UserUpdateModel model);
+        Task AddToRoleAsync(string userId, string roleName);
+        Task RemoveFromRoleAsync(string userId, string roleName);
+        Task<IEnumerable<UserViewModel>> GetInRoleAsync(string roleName);
     }
 }

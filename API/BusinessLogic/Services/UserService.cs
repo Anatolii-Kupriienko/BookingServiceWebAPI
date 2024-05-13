@@ -1,3 +1,4 @@
+using API.BusinessLogic.Services;
 using API.DbAccess;
 using API.DbAccess.Models;
 using API.Models;
@@ -123,6 +124,35 @@ namespace API.Services
             await _userManager.UpdateAsync(user);
 
             return mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(model.Id!));
+        }
+
+        public async Task AddToRoleAsync(string userId, string roleName)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == userId);
+            if (user is null)
+            {
+                throw new ArgumentException("User not found");
+            }
+
+            await _userManager.AddToRoleAsync(user, roleName);
+        }
+
+        public async Task RemoveFromRoleAsync(string userId, string roleName)
+        {
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == userId);
+            if (user is null)
+            {
+                throw new ArgumentException("User not found");
+            }
+
+            await _userManager.RemoveFromRoleAsync(user, roleName);
+        }
+
+        public async Task<IEnumerable<UserViewModel>> GetInRoleAsync(string roleName)
+        {
+            var users = await _userManager.GetUsersInRoleAsync(roleName);
+
+            return mapper.Map<IEnumerable<UserViewModel>>(users);
         }
 
         private async Task<UserModel> ValidateUserAsync(UserUpdateModel model)
