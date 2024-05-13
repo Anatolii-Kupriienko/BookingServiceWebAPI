@@ -14,10 +14,10 @@ namespace API.Models
         [Required]
         public RealEstateType Type { get; set; }
         [Required]
-        public User Owner { get; set; }
+        public UserUpdateModel Owner { get; set; }
         [Required]
         public bool IsVacant { get; set; }
-        public User? OccupiedBy { get; set; }
+        public UserUpdateModel? OccupiedBy { get; set; }
         public string? Notes { get; set; }
 
         public bool IsValid() // this can be done differently and using a library like FluentValidation

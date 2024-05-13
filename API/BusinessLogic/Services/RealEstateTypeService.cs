@@ -7,10 +7,10 @@ namespace API.Services
 {
     public class RealEstateTypeService : ICrud<RealEstateType>
     {
-        private readonly RealEstateTypeRepository _repository;
+        private readonly IRepository<RealEstateTypeModel> _repository;
         private readonly IMapper mapper;
 
-        public RealEstateTypeService(RealEstateTypeRepository realEstateTypeRepository, IMapper mapper)
+        public RealEstateTypeService(IRepository<RealEstateTypeModel> realEstateTypeRepository, IMapper mapper)
         {
             _repository = realEstateTypeRepository;
             this.mapper = mapper;
@@ -24,16 +24,6 @@ namespace API.Services
             }
 
             _repository.Add(mapper.Map<RealEstateTypeModel>(model));
-        }
-
-        public bool Delete(RealEstateType model)
-        {
-            if (model == null || !model.IsValid())
-            {
-                throw new ArgumentException(nameof(model));
-            }
-
-            return _repository.Delete(mapper.Map<RealEstateTypeModel>(model));
         }
 
         public bool DeleteById(int id)

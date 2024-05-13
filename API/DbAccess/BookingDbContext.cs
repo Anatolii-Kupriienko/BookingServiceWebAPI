@@ -13,9 +13,8 @@ namespace API.DbAccess
         {
         }
 
-        
         public DbSet<RealEstateModel> RealEstate { get; set; }
-        public DbSet<OwnerTypeModel> OwnerTypes { get; set; }
+        public DbSet<OwnerTypeModel> OwnerType { get; set; }
         public DbSet<RealEstateTypeModel> RealEstateTypes { get; set; }
     }
 }

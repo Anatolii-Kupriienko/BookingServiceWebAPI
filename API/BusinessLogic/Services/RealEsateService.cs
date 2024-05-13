@@ -42,16 +42,6 @@ namespace API.Services
             _repository.Update(realEstate);
         }
 
-        public bool Delete(RealEstate model)
-        {
-            if (model == null || !model.IsValid())
-            {
-                throw new ArgumentException(nameof(model));
-            }
-
-            return _repository.Delete(mapper.Map<RealEstateModel>(model));
-        }
-
         public bool DeleteById(int id)
         {
             return _repository.DeleteById(id);

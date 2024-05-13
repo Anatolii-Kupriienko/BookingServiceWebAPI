@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.BusinessLogic
 {
@@ -15,12 +16,18 @@ namespace API.BusinessLogic
                 re.MapFrom(re => re.OccupiedBy!.Id);
             }).ReverseMap();
 
-            CreateMap<Models.User, DbAccess.Models.UserModel>()
-            .ForMember(um => um.OwnerTypeId, u => u.MapFrom(u => u.OwnerType.Id)).ReverseMap();
+            CreateMap<Models.UserUpdateModel, DbAccess.Models.UserModel>()
+            .ForMember(um => um.OwnerTypeId, u =>
+            {
+                u.PreCondition(u => u.OwnerType != null);
+                u.MapFrom(u => u.OwnerType.Id);
+            }).ReverseMap();
 
-            CreateMap<Models.UserViewModel, Models.User>().ReverseMap();
+            CreateMap<Models.UserViewModel, Models.UserUpdateModel>().ReverseMap();
 
             CreateMap<DbAccess.Models.UserModel, Models.UserViewModel>();
+
+            CreateMap<Models.UserRegisterModel, DbAccess.Models.UserModel>();
 
             CreateMap<Models.RealEstateType, DbAccess.Models.RealEstateTypeModel>().ReverseMap();
 

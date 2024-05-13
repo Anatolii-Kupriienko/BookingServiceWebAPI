@@ -2,7 +2,6 @@ using API.DbAccess;
 using API.DbAccess.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace API.Utils
 {
@@ -10,7 +9,7 @@ namespace API.Utils
     {
 
         private const string AdminUser = "Admin";
-
+        private const string AdminEmail = "admin@example.com";
         private const string AdminPassword = "123123";
 
 
@@ -84,9 +83,10 @@ namespace API.Utils
 
         private static async Task<UserModel> EnsureUsersPopulated(BookingDbContext context, IApplicationBuilder app)
         {
-            if (!context.OwnerTypes.Any())
+
+            if (!context.OwnerType.Any())
             {
-                context.OwnerTypes.AddRange(
+                context.OwnerType.AddRange(
                     new OwnerTypeModel
                     {
                         Type = "Individual",
@@ -99,24 +99,32 @@ namespace API.Utils
                 context.SaveChanges();
             }
 
-            var ownerTypeId = context.OwnerTypes.First().Id;
+            var ownerTypeId = context.OwnerType.First().Id;
 
             UserManager<UserModel> userManager = app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<UserManager<UserModel>>();
+            RoleManager<IdentityRole> roleManager = app.ApplicationServices.CreateScope().ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            if (!roleManager.Roles.Any())
+            {
+                await roleManager.CreateAsync(new IdentityRole("Admin"));
+                await roleManager.CreateAsync(new IdentityRole("Owner"));
+            }
+
             UserModel user = await userManager.FindByNameAsync(AdminUser);
             if (user is null)
             {
                 user = new UserModel()
                 {
                     UserName = AdminUser,
-                    Email = "admin@example.com",
+                    Email = AdminEmail,
                     OwnerTypeId = ownerTypeId
                 };
 
                 await userManager.CreateAsync(user, AdminPassword);
                 user = await userManager.FindByNameAsync(AdminUser);
+                await userManager.AddToRoleAsync(user!, "Admin");
             }
 
-            return user;
+            return user!;
         }
     }
 }

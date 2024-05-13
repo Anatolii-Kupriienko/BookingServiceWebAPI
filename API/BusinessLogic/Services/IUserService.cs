@@ -4,11 +4,11 @@ namespace API.Services
 {
     public interface IUserService
     {
-        Task<UserViewModel> Add(User model);
-        Task<bool> Delete(User model);
-        Task<bool> DeleteById(string id);
-        Task<IEnumerable<UserViewModel>> Get();
-        Task<UserViewModel?> GetById(string id);
-        Task<UserViewModel> Update(User model);
+        Task<UserViewModel> RegisterAsync(UserRegisterModel model);
+        Task<bool> DeleteByIdAsync(string id);
+        Task<IEnumerable<UserViewModel>> GetAllAsync();
+        Task<UserViewModel?> GetByIdAsync(string id);
+        Task<UserViewModel?> GetByUsernameAsync(string username);
+        Task<UserViewModel> UpdateAsync(UserUpdateModel model);
     }
 }

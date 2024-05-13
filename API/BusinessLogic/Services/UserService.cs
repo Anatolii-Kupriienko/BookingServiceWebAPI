@@ -1,3 +1,4 @@
+using API.DbAccess;
 using API.DbAccess.Models;
 using API.Models;
 using AutoMapper;
@@ -9,15 +10,17 @@ namespace API.Services
     public class UserService : IUserService
     {
         private readonly UserManager<UserModel> _userManager;
+        private readonly IRepository<OwnerTypeModel> _ownerTypeRepository;
         private readonly IMapper mapper;
 
-        public UserService(UserManager<UserModel> userManager, IMapper mapper)
+        public UserService(UserManager<UserModel> userManager, IMapper mapper, IRepository<OwnerTypeModel> ownerTypeRepository)
         {
             _userManager = userManager;
             this.mapper = mapper;
+            _ownerTypeRepository = ownerTypeRepository;
         }
 
-        public async Task<UserViewModel> Add(User model)
+        public async Task<UserViewModel> RegisterAsync(UserRegisterModel model)
         {
             if (model == null)
             {
@@ -27,17 +30,16 @@ namespace API.Services
             var userModel = mapper.Map<UserModel>(model);
             await _userManager.CreateAsync(userModel, model.Password);
             var user = await _userManager.FindByNameAsync(model.Username);
+            // this is a very basic way to assign roles, in a production application you should have a more complex logic
+            if (user.OwnerType is not null && user.OwnerType.Type is "Owner" or "Hotel")
+            {
+                await _userManager.AddToRoleAsync(user, "Owner");
+            }
+
             return mapper.Map<UserViewModel>(user);
         }
 
-        public async Task<bool> Delete(User model)
-        {
-            var result = await _userManager.DeleteAsync(mapper.Map<UserModel>(model));
-
-            return result.Succeeded;
-        }
-
-        public async Task<bool> DeleteById(string id)
+        public async Task<bool> DeleteByIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user is null)
@@ -50,41 +52,80 @@ namespace API.Services
             return result.Succeeded;
         }
 
-        public async Task<IEnumerable<UserViewModel>> Get()
+        public async Task<IEnumerable<UserViewModel>> GetAllAsync()
         {
             var users = await _userManager.Users.ToListAsync();
+            var types = _ownerTypeRepository.Get();
+            foreach (var user in users)
+            {
+                if (user.OwnerTypeId is null) continue;
+
+                var type = types.FirstOrDefault(t => t.Id == user.OwnerTypeId);
+                user.OwnerType = type;
+            }
 
             return mapper.Map<IEnumerable<UserViewModel>>(users);
         }
 
-        public async Task<UserViewModel?> GetById(string id)
+        public async Task<UserViewModel?> GetByIdAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
 
             if (user is not null)
             {
-                return mapper.Map<UserViewModel>(user);
+                var userViewModel = mapper.Map<UserViewModel>(user);
+                if (user.OwnerTypeId is not null)
+                {
+                    var type = _ownerTypeRepository.GetById((int)user.OwnerTypeId);
+                    userViewModel.OwnerType = mapper.Map<OwnerType>(type);
+                }
+
+                return userViewModel;
             }
 
             return null;
         }
 
-        public async Task<UserViewModel> Update(User model)
+        public async Task<UserViewModel?> GetByUsernameAsync(string username)
         {
-            var user = await ValidateUser(model);
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user is not null)
+            {
+                var userViewModel = mapper.Map<UserViewModel>(user);
+                if (user.OwnerTypeId is not null)
+                {
+                    var type = mapper.Map<OwnerType>(_ownerTypeRepository.GetById((int)user.OwnerTypeId));
+                    userViewModel.OwnerType = type;
+                }
+
+                return userViewModel;
+            }
+
+            return null;
+        }
+
+        public async Task<UserViewModel> UpdateAsync(UserUpdateModel model)
+        {
+            var user = await ValidateUserAsync(model);
 
             if (!string.IsNullOrEmpty(model.NewPassword))
             {
                 await _userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
             }
 
-            user = mapper.Map<UserModel>(model);
+            user.Email = model.Email;
+            user.UserName = model.Username;
+            if (model.OwnerType is not null)
+            {
+                user.OwnerTypeId = model.OwnerType.Id;
+            }
             await _userManager.UpdateAsync(user);
 
             return mapper.Map<UserViewModel>(await _userManager.FindByIdAsync(model.Id!));
         }
 
-        private async Task<UserModel> ValidateUser(User model)
+        private async Task<UserModel> ValidateUserAsync(UserUpdateModel model)
         {
             var user = await _userManager.FindByIdAsync(model.Id ?? string.Empty);
             if (user is null)

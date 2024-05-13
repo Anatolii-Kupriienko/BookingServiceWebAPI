@@ -7,10 +7,10 @@ namespace API.Services
 {
     public class OwnerTypeService : ICrud<OwnerType>
     {
-        private readonly OwnerTypeRepository _repository;
+        private readonly IRepository<OwnerTypeModel> _repository;
         private readonly IMapper mapper;
 
-        public OwnerTypeService(OwnerTypeRepository ownerTypeRepository, IMapper mapper)
+        public OwnerTypeService(IRepository<OwnerTypeModel> ownerTypeRepository, IMapper mapper)
         {
             _repository = ownerTypeRepository;
             this.mapper = mapper;
@@ -24,16 +24,6 @@ namespace API.Services
             }
 
             _repository.Add(mapper.Map<OwnerTypeModel>(model));
-        }
-
-        public bool Delete(OwnerType model)
-        {
-            if (model == null || !model.IsValid())
-            {
-                throw new ArgumentException(nameof(model));
-            }
-
-            return _repository.Delete(mapper.Map<OwnerTypeModel>(model));
         }
 
         public bool DeleteById(int id)

@@ -6,10 +6,9 @@ namespace API.DbAccess.Models
 {
     public class UserModel : IdentityUser
     {
-        [Required]
         [ForeignKey("OwnerType")]
-        public int OwnerTypeId { get; set; }
+        public int? OwnerTypeId { get; set; }
 
-        public OwnerTypeModel OwnerType { get; set; }
+        public OwnerTypeModel? OwnerType { get; set; }
     }
 }

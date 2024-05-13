@@ -1,4 +1,5 @@
 using API.BusinessLogic;
+using API.BusinessLogic.Services;
 using API.DbAccess;
 using API.DbAccess.Models;
 using API.Models;
@@ -10,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDistributedMemoryCache();
@@ -34,8 +36,9 @@ builder.Services.AddScoped<IRepository<OwnerTypeModel>, OwnerTypeRepository>();
 builder.Services.AddScoped<IRepository<RealEstateTypeModel>, RealEstateTypeRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRealEstateService, RealEstateService>();
-builder.Services.AddScoped<ICrud<OwnerType>, OwnerTypeService>();
 builder.Services.AddScoped<ICrud<RealEstateType>, RealEstateTypeService>();
+builder.Services.AddScoped<ICrud<OwnerType>, OwnerTypeService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IMapper>(sp => new Mapper(new MapperConfiguration(conf => { conf.AddProfile<AutomapperProfile>(); })));
 
 var app = builder.Build();
@@ -46,8 +49,7 @@ app.UseSwaggerUI();
 app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapGet("/", () => "Hello World!");
+app.MapControllers();
 
 await SeedData.EnsurePopulated(app); // this is used only for testing/demonstration since this is a demo project
 app.Run();

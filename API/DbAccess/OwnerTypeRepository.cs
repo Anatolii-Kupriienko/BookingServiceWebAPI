@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using API.DbAccess.Models;
 
 namespace API.DbAccess
@@ -40,12 +36,12 @@ namespace API.DbAccess
 
         public IEnumerable<OwnerTypeModel> Get()
         {
-            return _context.OwnerTypes;
+            return _context.OwnerType;
         }
 
         public OwnerTypeModel? GetById(int id)
         {
-            return _context.OwnerTypes.Find(id);
+            return _context.OwnerType.Find(id);
         }
 
         public void Update(OwnerTypeModel model)
