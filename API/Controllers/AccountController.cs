@@ -1,7 +1,6 @@
 using API.DbAccess.Models;
 using API.Models;
 using API.Services;
-using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

@@ -19,16 +19,6 @@ namespace API.Services
             this.userManager = userManager;
         }
 
-        public void Add(RealEstate model)
-        {
-            if (model == null || !model.IsValid())
-            {
-                throw new ArgumentException(nameof(model));
-            }
-
-            _repository.Add(mapper.Map<RealEstateModel>(model));
-        }
-
         public void BookForUser(int realEstateId, string userId)
         {
             var realEstate = _repository.GetById(realEstateId);
@@ -40,6 +30,17 @@ namespace API.Services
             // the above check can be separated into several if statements for better readability and error messages
             realEstate.OccupiedById = user.Id;
             _repository.Update(realEstate);
+        }
+
+        public RealEstate Create(RealEstateInsertModel realEstate)
+        {
+            if (realEstate == null || !realEstate.IsValid())
+            {
+                throw new ArgumentException(nameof(realEstate));
+            }
+
+            var resut = _repository.Add(mapper.Map<RealEstateModel>(realEstate));
+            return mapper.Map<RealEstate>(resut);
         }
 
         public bool DeleteById(int id)
@@ -59,7 +60,7 @@ namespace API.Services
             _repository.Update(realEstate);
         }
 
-        public IEnumerable<RealEstate> Get()
+        public IEnumerable<RealEstate> GetAll()
         {
             return mapper.Map<IEnumerable<RealEstate>>(_repository.Get());
         }
@@ -108,14 +109,15 @@ namespace API.Services
             return mapper.Map<IEnumerable<RealEstate>>(data);
         }
 
-        public void Update(RealEstate model)
+        public RealEstate Update(RealEstate realEstate)
         {
-            if (model == null || !model.IsValid())
+            if (realEstate == null || !realEstate.IsValid())
             {
-                throw new ArgumentException(nameof(model));
+                throw new ArgumentException(nameof(realEstate));
             }
 
-            _repository.Update(mapper.Map<RealEstateModel>(model));
+            var result = _repository.Update(mapper.Map<RealEstateModel>(realEstate));
+            return mapper.Map<RealEstate>(result);
         }
     }
 }

@@ -12,10 +12,11 @@ namespace API.DbAccess
             _context = context;
         }
 
-        public void Add(RealEstateModel model)
+        public RealEstateModel Add(RealEstateModel model)
         {
-            _context.Add(model);
+            var result = _context.Add(model);
             _context.SaveChanges();
+            return result.Entity;
         }
 
         public bool Delete(RealEstateModel model)
@@ -49,10 +50,11 @@ namespace API.DbAccess
             .FirstOrDefault(x => x.Id == id);
         }
 
-        public void Update(RealEstateModel model)
+        public RealEstateModel Update(RealEstateModel model)
         {
-            _context.Update(model);
+            var result = _context.Update(model);
             _context.SaveChanges();
+            return result.Entity;
         }
     }
 }

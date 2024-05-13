@@ -11,10 +11,11 @@ namespace API.DbAccess
             _context = context;
         }
 
-        public void Add(RealEstateTypeModel model)
+        public RealEstateTypeModel Add(RealEstateTypeModel model)
         {
-            _context.Add(model);
+            var result = _context.Add(model);
             _context.SaveChanges();
+            return result.Entity;
         }
 
         public bool Delete(RealEstateTypeModel model)
@@ -44,10 +45,11 @@ namespace API.DbAccess
             return _context.RealEstateTypes.Find(id);
         }
 
-        public void Update(RealEstateTypeModel model)
+        public RealEstateTypeModel Update(RealEstateTypeModel model)
         {
-            _context.Update(model);
+            var result = _context.Update(model);
             _context.SaveChanges();
+            return result.Entity;
         }
     }
 }

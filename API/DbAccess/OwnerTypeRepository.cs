@@ -11,10 +11,11 @@ namespace API.DbAccess
             _context = context;
         }
 
-        public void Add(OwnerTypeModel model)
+        public OwnerTypeModel Add(OwnerTypeModel model)
         {
-            _context.Add(model);
+            var result = _context.Add(model);
             _context.SaveChanges();
+            return result.Entity;
         }
 
         public bool Delete(OwnerTypeModel model)
@@ -44,10 +45,11 @@ namespace API.DbAccess
             return _context.OwnerType.Find(id);
         }
 
-        public void Update(OwnerTypeModel model)
+        public OwnerTypeModel Update(OwnerTypeModel model)
         {
-            _context.Update(model);
+            var result = _context.Update(model);
             _context.SaveChanges();
+            return result.Entity;
         }
     }
 }

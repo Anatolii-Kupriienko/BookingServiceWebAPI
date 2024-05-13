@@ -16,6 +16,8 @@ namespace API.BusinessLogic
                 re.MapFrom(re => re.OccupiedBy!.Id);
             }).ReverseMap();
 
+            CreateMap<Models.RealEstateInsertModel, DbAccess.Models.RealEstateModel>();
+
             CreateMap<Models.UserUpdateModel, DbAccess.Models.UserModel>()
             .ForMember(um => um.OwnerTypeId, u =>
             {
@@ -31,7 +33,11 @@ namespace API.BusinessLogic
 
             CreateMap<Models.RealEstateType, DbAccess.Models.RealEstateTypeModel>().ReverseMap();
 
+            CreateMap<Models.RealEstateTypeInsertModel, DbAccess.Models.RealEstateTypeModel>();
+
             CreateMap<Models.OwnerType, DbAccess.Models.OwnerTypeModel>().ReverseMap();
+
+            CreateMap<Models.OwnerTypeInsertModel, DbAccess.Models.OwnerTypeModel>();
         }
     }
 }

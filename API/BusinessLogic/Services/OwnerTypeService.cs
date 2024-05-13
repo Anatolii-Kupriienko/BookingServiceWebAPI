@@ -1,11 +1,13 @@
+using API.BusinessLogic.Services;
 using API.DbAccess;
 using API.DbAccess.Models;
 using API.Models;
 using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 
 namespace API.Services
 {
-    public class OwnerTypeService : ICrud<OwnerType>
+    public class OwnerTypeService : IOwnerTypeService
     {
         private readonly IRepository<OwnerTypeModel> _repository;
         private readonly IMapper mapper;
@@ -16,14 +18,15 @@ namespace API.Services
             this.mapper = mapper;
         }
 
-        public void Add(OwnerType model)
+        public OwnerType Create(OwnerTypeInsertModel ownerType)
         {
-            if (model == null || !model.IsValid())
+            if (ownerType == null || !ownerType.IsValid())
             {
-                throw new ArgumentException(nameof(model));
+                throw new ArgumentException(nameof(ownerType));
             }
 
-            _repository.Add(mapper.Map<OwnerTypeModel>(model));
+            var result = _repository.Add(mapper.Map<OwnerTypeModel>(ownerType));
+            return mapper.Map<OwnerType>(result);
         }
 
         public bool DeleteById(int id)
@@ -31,7 +34,7 @@ namespace API.Services
             return _repository.DeleteById(id);
         }
 
-        public IEnumerable<OwnerType> Get()
+        public IEnumerable<OwnerType> GetAll()
         {
             return mapper.Map<IEnumerable<OwnerType>>(_repository.Get());
         }
@@ -47,14 +50,15 @@ namespace API.Services
             return null;
         }
 
-        public void Update(OwnerType model)
+        OwnerType IOwnerTypeService.Update(OwnerType ownerType)
         {
-            if (model == null || !model.IsValid())
+            if (ownerType == null || !ownerType.IsValid())
             {
-                throw new ArgumentException(nameof(model));
+                throw new ArgumentException(nameof(ownerType));
             }
 
-            _repository.Update(mapper.Map<OwnerTypeModel>(model));
+            var result = _repository.Update(mapper.Map<OwnerTypeModel>(ownerType));
+            return mapper.Map<OwnerType>(result);
         }
     }
 }

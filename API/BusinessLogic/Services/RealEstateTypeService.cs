@@ -1,3 +1,4 @@
+using API.BusinessLogic.Services;
 using API.DbAccess;
 using API.DbAccess.Models;
 using API.Models;
@@ -5,7 +6,7 @@ using AutoMapper;
 
 namespace API.Services
 {
-    public class RealEstateTypeService : ICrud<RealEstateType>
+    public class RealEstateTypeService : IRealEstateTypeService
     {
         private readonly IRepository<RealEstateTypeModel> _repository;
         private readonly IMapper mapper;
@@ -26,6 +27,11 @@ namespace API.Services
             _repository.Add(mapper.Map<RealEstateTypeModel>(model));
         }
 
+        public RealEstateType Create(RealEstateTypeInsertModel realEstateType)
+        {
+            throw new NotImplementedException();
+        }
+
         public bool DeleteById(int id)
         {
             return _repository.DeleteById(id);
@@ -34,6 +40,11 @@ namespace API.Services
         public IEnumerable<RealEstateType> Get()
         {
             return mapper.Map<IEnumerable<RealEstateType>>(_repository.Get());
+        }
+
+        public IEnumerable<RealEstateType> GetAll()
+        {
+            throw new NotImplementedException();
         }
 
         public RealEstateType? GetById(int id)
@@ -55,6 +66,11 @@ namespace API.Services
             }
 
             _repository.Update(mapper.Map<RealEstateTypeModel>(model));
+        }
+
+        RealEstateType IRealEstateTypeService.Update(RealEstateType realEstateType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -4,8 +4,8 @@ namespace API.DbAccess
     {
         IEnumerable<BaseModel> Get();
         BaseModel? GetById(int id);
-        void Add(BaseModel model);
-        void Update(BaseModel model);
+        BaseModel Add(BaseModel model);
+        BaseModel Update(BaseModel model);
         bool Delete(BaseModel model);
         bool DeleteById(int id);
     }

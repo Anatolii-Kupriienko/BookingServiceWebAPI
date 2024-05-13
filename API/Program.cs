@@ -36,8 +36,8 @@ builder.Services.AddScoped<IRepository<OwnerTypeModel>, OwnerTypeRepository>();
 builder.Services.AddScoped<IRepository<RealEstateTypeModel>, RealEstateTypeRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRealEstateService, RealEstateService>();
-builder.Services.AddScoped<ICrud<RealEstateType>, RealEstateTypeService>();
-builder.Services.AddScoped<ICrud<OwnerType>, OwnerTypeService>();
+builder.Services.AddScoped<IRealEstateTypeService, RealEstateTypeService>();
+builder.Services.AddScoped<IOwnerTypeService, OwnerTypeService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IMapper>(sp => new Mapper(new MapperConfiguration(conf => { conf.AddProfile<AutomapperProfile>(); })));
 
