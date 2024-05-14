@@ -1,9 +1,6 @@
-using System.Runtime.CompilerServices;
-using API.BusinessLogic.Services;
 using API.Models;
 using API.Services;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers

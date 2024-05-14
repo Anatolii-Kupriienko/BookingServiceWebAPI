@@ -69,38 +69,6 @@ namespace API.Controllers
             {
                 return BadRequest(e.Message);
             }
-
         }
-
-        // TODO: PUT THIS INTO A SEPARATE CONTROLLER
-        // [Authorize]
-        // [HttpPost]
-        // public IActionResult CreateRealEstate([FromBody] RealEstateInsertModel realEstate)
-        // {
-        //     try
-        //     {
-        //         var createdRealEstate = _realEstateService.Create(realEstate);
-        //         return CreatedAtAction(nameof(GetRealEstateById), new { id = createdRealEstate.Id }, createdRealEstate);
-        //     }
-        //     catch (ArgumentException e)
-        //     {
-        //         return BadRequest(e.Message);
-        //     }
-        // }
-
-        // [Authorize]
-        // [HttpPut]
-        // public IActionResult UpdateRealEstate([FromBody] RealEstate realEstate)
-        // {
-        //     try
-        //     {
-        //         var updatedRealEstate = _realEstateService.Update(realEstate);
-        //         return Ok(updatedRealEstate);
-        //     }
-        //     catch (ArgumentException e)
-        //     {
-        //         return BadRequest(e.Message);
-        //     }
-        // }
     }
 }

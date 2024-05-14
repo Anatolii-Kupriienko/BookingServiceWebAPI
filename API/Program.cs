@@ -2,7 +2,6 @@ using API.BusinessLogic;
 using API.BusinessLogic.Services;
 using API.DbAccess;
 using API.DbAccess.Models;
-using API.Models;
 using API.Services;
 using API.Utils;
 using AutoMapper;
